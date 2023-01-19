@@ -1,31 +1,28 @@
 public class Comensales  implements Runnable{
     private String nombre;
-    private int quantity = 1;
-    private Magdalena action;
+    private int prioridad;
     private Mesa mesa;
 
-    public Comensales(String nombre, Mesa mesa) {
+    public Comensales(String nombre, int prioridad, Mesa mesa) {
         this.nombre = nombre;
+        this.prioridad = prioridad;
         this.mesa = mesa;
-
-
-
     }
 
     @Override
     public void run() {
-
         for (int i = 0; i < 3; i++) {
-            if (action.equals(Magdalena.EXTRAER)){
-                this.mesa.cogerMagdalena(this.nombre);
+            mesa.cogerMagdalena();
+            System.out.println(nombre+ "ha cogido una magdalena de la mesa");
+
+            try{
+                Thread.sleep(10000);
+            }catch (InterruptedException e){
+                e.printStackTrace();
             }
-
-
-
+            System.out.println(nombre+ " se ha terminado de comer una magdalena");
+            mesa.devolverMagdalena();
         }
-
-
-
 
 
     }

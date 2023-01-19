@@ -2,31 +2,43 @@ import java.beans.DefaultPersistenceDelegate;
 
 public class Mesa {
 
-    private int magdalenas = 15;
-    int quantity = 1;
+    private int cantidad;
+    private boolean disponible;
 
-    public Mesa(int magdalenas ) {
-        this.magdalenas = magdalenas;
-
-    }
-
-    public void cogerMagdalena (String name){
-        String message = name;
-
-
-            this.magdalenas -= quantity;
-            message += "he cogido" + quantity+ "magdalena";
-
-        System.out.println(message);
-        this.printMagdalenas();
-
+    public Mesa( ) {
+        this.cantidad = 15;
+        this.disponible = true;
 
     }
 
+    public synchronized void cogerMagdalena (){
+        while (!disponible){
+            try{
+                wait();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+        cantidad--;
+        if (cantidad ==0){
+            disponible = false;
+        }
+        notifyAll();
 
-
-    synchronized  private void printMagdalenas(){
-        System.out.println("Magdalenas actuales: " +this.magdalenas);
+    }
+    public synchronized void devolverMagdalena(){
+        while (disponible){
+            try {
+                wait();
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+        cantidad++;
+        if (cantidad >0){
+            disponible = true;
+        }
+        notifyAll();
     }
 
 }
